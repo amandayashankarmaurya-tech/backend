@@ -10,23 +10,29 @@ app.use(cors({
 }));
 app.use(express.json());
 
+app.use(express.urlencoded({ extended: true }));
+
 app.post("/submit", async (req, res) => {
   const { name, email, message } = req.body;
 
   console.log("Incoming:", req.body);
 
+  
+
+
   try {
     const transporter = nodemailer.createTransport({
       host: "smtp-relay.brevo.com",
       port: 587,
+      secure: false,
       auth: {
-        user: "apikey",
-        pass: process.env.BREVO_API_KEY,
+        user: process.env.BREVO_LOGIN,
+        pass: process.env.BREVO_SMTP_KEY,
       },
     });
 
     await transporter.sendMail({
-      from: "Portfolio Contact <no-reply@portfolio.com>",
+      from: "Portfolio Contact <amandayashankarmaurya@gmail.com>",
       to: "amandayashankarmaurya@gmail.com",
       subject: `New Contact Form Submission from ${name}`,
       text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
